@@ -1,0 +1,144 @@
+import java.util.*;
+
+class Librarybookreserve {
+  
+HashMap<String,Integer> book=new HashMap();
+HashMap<String,Integer> stable=new HashMap();
+    public void addBook(String title,int count){
+        if(!book.containsKey(title)){
+            book.put(title,count);
+        }
+        else{
+            book.put(title,book.get(title)+count);
+        }
+        if(!stable.containsKey(title)){
+            stable.put(title,count);
+        }
+        else{
+            stable.put(title,stable.get(title)+count);
+        }
+             
+    }
+
+    public void borrowBook(String borrow, int co) {
+    if (!stable.containsKey(borrow)) {
+        System.out.println("Sorry, the book is not in the library.");
+        return;
+    }
+
+    int a = book.getOrDefault(borrow, 0); 
+    if (co <= a) {
+        book.put(borrow, a - co);
+        System.out.println("Book borrowed successfully!");
+    } else {
+        System.out.println("In our library, only " + a + " copies of '" + borrow + "' are available.");
+    }
+}
+
+
+    public void returnBook(String ret) {
+        if (!stable.containsKey(ret)) {
+        System.out.println("Book '" + ret + "' is not in the library system.");
+        return;
+    }
+        int oldcount=stable.get(ret);
+        int newcount=book.get(ret);
+        
+        
+        if(newcount!=oldcount&&newcount<oldcount){
+        if(book.containsKey(ret)){
+            book.put(ret,book.get(ret)+1);
+            System.out.println("Book returned Successfully!!");
+        }
+        else{
+            System.out.println("Book was not in the library");
+        }  
+    }
+    else{
+        System.out.println("This " +ret+ " Book was Not Taken in our library");
+    }
+    }
+    
+    public void getAvailablebook(String bookname) {
+            if(book.containsKey(bookname)){
+                System.out.println(bookname+" Book "+" : "+book.get(bookname)+" Books are Available in our Library!!!");
+            }
+            else{
+                System.out.println("This book was not Available");
+            }
+    }
+     public void totalAvailablebooks(){
+         for (Map.Entry<String, Integer> entry : book.entrySet()) {
+            System.out.println("Book Name : " + entry.getKey() + ", Total Count : " + entry.getValue());
+        }
+     }
+    public void getBorrowedBooks() {
+    for (String title : stable.keySet()) {
+        int borrowed = stable.get(title) - book.getOrDefault(title, 0);
+        if (borrowed >= 0) {
+            System.out.println("Book: " + title + " | Borrowed Copies: " + borrowed);
+        }
+    }
+}
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        Librarybookreserve lib = new Librarybookreserve();
+
+        while (true) {
+            System.out.println("\n=== Library Menu ===");
+            System.out.println("1. Add Book");
+            System.out.println("2. Borrow Book");
+            System.out.println("3. Return Book");
+            System.out.println("4. Check Available Book");
+            System.out.println("5. Show All Available Books");
+            System.out.println("6. Show Borrowed Books");
+            System.out.println("7. Exit");
+            System.out.print("Enter your choice: ");
+
+            int choice = sc.nextInt();
+            sc.nextLine();  // consume newline
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter book name: ");
+                    String title = sc.nextLine();
+                    System.out.print("Enter quantity: ");
+                    int qty = sc.nextInt();
+                    lib.addBook(title, qty);
+                    break;
+                case 2:
+                    System.out.print("Enter book name to borrow: ");
+                    String bname = sc.nextLine();
+                    System.out.print("Enter quantity: ");
+                    int bqty = sc.nextInt();
+                    lib.borrowBook(bname, bqty);
+                    break;
+                case 3:
+                    System.out.print("Enter book name to return: ");
+                    String rname = sc.nextLine();
+                    lib.returnBook(rname);
+                    break;
+                case 4:
+                    System.out.print("Enter book name to check: ");
+                    String cname = sc.nextLine();
+                    lib.getAvailablebook(cname);
+                    break;
+                case 5:
+                    lib.totalAvailablebooks();
+                    break;
+                case 6:
+                    lib.getBorrowedBooks();
+                    break;
+                case 7:
+                    System.out.println("Exiting. Thank you!");
+                    sc.close();
+                    return;
+                default:
+                    System.out.println("Invalid choice! Try again.");
+            }
+        }
+    }
+}
